@@ -1,3 +1,11 @@
+### Relays
+The maximum switching fequency of the relay was 150 Hz. The relay did switch 250 Hz for a short amount of time before it stopped switching. At 150 Hz the relay's performance was consistance.
+The current draw of the switching source for a relay is between 1 and 30 mA.
+
+### MOSFET
+
+
+
 # Lab 6: "High Power" Control
 For starters, you will not be dealing with anything that is truly "high power". Instead, what I am considering "high power" is anything with the potential to damage or fry your microcontrollers if you were to drive them directly. The idea behind this part of the lab is to learn how not only to drive things that may require a high voltage or high current, but how to then protect your microcontroller from them.
 

@@ -1,3 +1,9 @@
+#PWM Part 2
+
+
+
+
+
 # Lab 6: Precision Control
 Some applications require large amounts of voltage or current, so switching techniques must be used in order to provide the desired output. Other cases however require a finer control over the voltage or current going into them (some even require a control over resistance). So far you have looked at PWM to control the brightness of an LED, is there a way to use this to output a specified voltage or current, or even a specific waveform?
 

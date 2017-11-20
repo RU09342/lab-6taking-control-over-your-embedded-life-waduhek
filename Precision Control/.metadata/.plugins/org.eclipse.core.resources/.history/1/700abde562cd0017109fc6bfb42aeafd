@@ -1,0 +1,23 @@
+#include <msp430.h> 
+
+
+int main(void)
+{
+    WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
+    PM5CTL0 &= ~LOCKLPM5;
+    P3DIR |= 0xFF;
+    P3OUT &= 0x00; // Set the LEDs off
+    TB0CCTL0 = CCIE;   // CCR0 interrupt enabled
+    TBCTL = TBSSEL_2 + MC_1 + ID_3; // SMCLK/8, UPMODE
+    TBCCR0 = 0xFFFF; // CCR0 = 65535 is the number that the clock counts to
+    __enable_interrupt();
+    __bis_SR_register(LPM0 + GIE); // LPM0 with interrupts enabled
+}
+
+
+#pragma vector=TIMER0_B0_VECTOR
+__interrupt void Timer0_B0 (void)
+{
+    P3OUT = P3OUT + 1;
+
+}
