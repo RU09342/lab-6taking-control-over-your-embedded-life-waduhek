@@ -127,7 +127,7 @@ void PWM_init()
     P3DIR |= BIT6;
     P3SEL1 |= BIT6;
 
-    // Configure Timer0_A
+    // Configure Timer0_B
     TB0CCR0 = 255;                          // PWM Period
     TB0CCTL2 = OUTMOD_7;                      // CCR1 reset/set
     TB0CCR2 = 0;                             // CCR1 PWM duty cycle
@@ -151,16 +151,16 @@ void tempToPWM(int temp)
 {
     int pwm;
     float tp;
-    tp = temp/100.0;
+    tp = temp/100.0;						//convert voltage in mV to temp reading
     if(tp < 0.41){
-        pwm = -3138.9*tp + 1377.8;
+		pwm = -3138.9*tp + 1377.8;			// set PWM value based upon linear function if less than 41 degrees celcius is the desired temp
     }else{
-        pwm = -220.56*tp + 163.16;
+        pwm = -220.56*tp + 163.16;			// set PWM value based upon linear function if greater than 41 degrees celcius is the desired temp
     }
-    if(pwm < 0){
-        pwm = 0;
+    if(pwm < 0){		
+        pwm = 0;							// Set PMW to 0 if value is supposed to be negative
     }
-    if(pwm > 0 & pwm < 31){
+    if(pwm > 0 & pwm < 31){					// If PWM value is expected to be between 0 and 31, set output on full and wait 1 second before returning to deswignated value to kick start system
         TB0CCR2 = 255;
         __delay_cycles(1000000);
     }
@@ -189,19 +189,13 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12_ISR (void)
 
                 value = ADC12MEM0;
                 //Convert to voltage
-                char c[4];
-                value = value*.00080566;
-                unsigned int trsmt = value * 10000;
-                unsigned int t1 = trsmt>>8;
-                //UCA0TXBUF = t1;
-                //UCA0TXBUF = trsmt;
                 unsigned int j;
                 unsigned int i;
                 unsigned int tmp = 0;
                 float t;
-                for(j = 0; j < 4; j ++){
-                for(i = 0; i <= 9; i ++){
-                    t = value*pow(10,j);
+                for(j = 0; j < 4; j ++){		//Cycling through temp digits
+                
+                    t = value*pow(10,j);		//seperating adc value by digit
 
                     if(tmp == 1){
                         showChar('1',j+1);
@@ -234,7 +228,6 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12_ISR (void)
                         showChar('0',j+1);
                         break;
                     }
-                }
                 }
                 // Exit from LPM0 and continue executing main
                 __bic_SR_register_on_exit(LPM0_bits);
@@ -306,7 +299,6 @@ __interrupt void Timer_A0(void)
 {
     value = ADC12MEM0;
     //Convert to voltage
-    char c[4];
     value = value*.00080566;
     unsigned int trsmt = value * 10000;
     unsigned int t1 = trsmt>>8;
