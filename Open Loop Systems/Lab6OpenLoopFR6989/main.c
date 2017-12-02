@@ -1,5 +1,5 @@
 /*
- * Author: Sean McGuire
+ * Author: Sean McGuire and Alex Frederick
  * Last Edited: 4:43
  *******************************************************************************
  *
