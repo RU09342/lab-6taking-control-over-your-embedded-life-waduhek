@@ -1,4 +1,9 @@
 # Lab 6: Open Loop Systems
+An open loop system is one which does not take feedback into consideration. For this part of the lab we will design a system which will change the temperature of a voltage regulator to the temperature of a setpoint which is sent over UART to the MSP430. This setpoint is then used in an equation derived from measurements taken which correlate the temperature that the fan will cool to and the PWM setting of the fan. In our case this equation was not very linear so to make it linear the data was split into two different lines. Based on the setpoint temperature the program will decided which equation to utilize. 
+
+
+
+# Lab 6: Open Loop Systems
 Believe it or not, up to this point, any time that you have wanted to control your LED color or brightness so far, you have been attempting to control an Open Loop System. Basically, when in your code you state that you want a certain brightness or even a duty cycle, you are going on blind faith that the output is actually what it is supposed to be. If something seemed off, you probably went back into the code and tweaked some values. In the case of actual Systems and Control Theory, you are the feedback loop, providing some corrective signal to the system to help obtain a closer output, and we will deal with this in the Milestone. For now, we need to focus on system modeling getting a system to a desirable state. For this lab, you will be attempting to keep a voltage regulator within a specific temperature range using a DC fan which you will have control over. For this part to be a success, you need to figure out what is the minimum fan speed you need to cool off the regulator so that is stays operational.
 
 ## Voltage Regulator
