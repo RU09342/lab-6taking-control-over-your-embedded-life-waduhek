@@ -48,9 +48,9 @@ int main(void)
     __enable_interrupt(); // Enables all interrupts
     while (1)
     {
-
+            __delay_cycles(5000);
             ADC12CTL0 |= ADC12ENC | ADC12SC;    // Start sampling/conversion
-            __bis_SR_register(LPM0_bits | GIE); // LPM0, ADC12_ISR will force exit
+            __bis_SR_register(GIE); // LPM0, ADC12_ISR will force exit
             __no_operation();                   // For debugger
     }
 }
@@ -128,10 +128,10 @@ void PWM_init()
     P3SEL1 |= BIT6;
 
     // Configure Timer0_B
-    TB0CCR0 = 255;                          // PWM Period
+    TB0CCR0 = 25500;                          // PWM Period
     TB0CCTL2 = OUTMOD_7;                      // CCR1 reset/set
     TB0CCR2 = 0;                             // CCR1 PWM duty cycle
-    TB0CTL = TBSSEL__ACLK | MC__UP | TBCLR;   // ACLK, up mode, clear TAR
+    TB0CTL = TBSSEL__ACLK | MC__UP | TBCLR |ID_3 ;   // ACLK, up mode, clear TAR
 }
 
 void ADC_init(){
@@ -231,6 +231,7 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12_ISR (void)
                 }
                 // Exit from LPM0 and continue executing main
                 __bic_SR_register_on_exit(LPM0_bits);
+
             break;
         case ADC12IV_ADC12IFG1:   break;    // Vector 14:  ADC12MEM1
         case ADC12IV_ADC12IFG2:   break;    // Vector 16:  ADC12MEM2
@@ -281,9 +282,9 @@ void __attribute__ ((interrupt(USCI_A0_VECTOR))) USCI_A0_ISR (void)
     case USCI_NONE: break;
     case USCI_UART_UCRXIFG:
       while(!(UCA0IFG&UCTXIFG));
-      int i = UCA0RXBUF;
+      unsigned volatile int i = UCA0RXBUF;
       UCA0TXBUF = UCA0RXBUF;
-      tempToPWM(i);
+      TB0CCR2 = i * 100;
 
 
       __no_operation();
